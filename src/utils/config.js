@@ -5,9 +5,7 @@ const logger = require('./logger');
 const requiredEnvVars = [
   'IMAP_USER',
   'IMAP_PASSWORD',
-  'TARGET_SENDER',
-  'TELEGRAM_BOT_TOKEN',
-  'TELEGRAM_CHAT_ID'
+  'TARGET_SENDER'
 ];
 
 const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
@@ -33,9 +31,8 @@ const config = {
     markAsRead: process.env.MARK_AS_READ === 'true' || true,
     linkPattern: process.env.LINK_PATTERN || null
   },
-  telegram: {
-    botToken: process.env.TELEGRAM_BOT_TOKEN,
-    chatId: process.env.TELEGRAM_CHAT_ID
+  github: {
+    pageUrl: process.env.GITHUB_PAGE_URL || 'https://username.github.io/repo-name/'
   },
   browser: {
     headless: process.env.BROWSER_HEADLESS === 'true' || false,

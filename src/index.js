@@ -2,14 +2,14 @@ const logger = require('./utils/logger');
 const config = require('./utils/config');
 const ImapClient = require('./mail/imap-client');
 const PDFGenerator = require('./browser/pdf-generator');
-const TelegramService = require('./telegram/bot');
+const GitHubPublisher = require('./github/publisher');
 const fs = require('fs').promises;
 
-class EmailToTelegramService {
+class EmailToGitHubService {
   constructor() {
     this.imapClient = new ImapClient();
     this.pdfGenerator = new PDFGenerator();
-    this.telegram = new TelegramService();
+    this.github = new GitHubPublisher();
     this.isRunning = false;
   }
 
@@ -19,12 +19,8 @@ class EmailToTelegramService {
   async start() {
     try {
       logger.info('='.repeat(60));
-      logger.info('📧 Email to Telegram PDF Service');
+      logger.info('📧 Email to GitHub Pages PDF Service');
       logger.info('='.repeat(60));
-
-      // Initialize Telegram
-      logger.info('Initializing Telegram bot...');
-      await this.telegram.initialize();
 
       // Initialize PDF Generator
       logger.info('Initializing PDF generator...');
@@ -45,12 +41,12 @@ class EmailToTelegramService {
       logger.info('✅ Service started successfully!');
       logger.info(`📬 Monitoring: ${config.email.targetSender}`);
       logger.info(`📧 Mailbox: ${config.email.mailbox}`);
+      logger.info(`📄 GitHub Pages: ${this.github.getPageUrl()}`);
       logger.info('⏳ Waiting for emails...');
       logger.info('='.repeat(60));
 
     } catch (error) {
       logger.error('Failed to start service:', { error: error.message });
-      await this.telegram.sendError('Service failed to start', { error: error.message });
       throw error;
     }
   }
@@ -70,28 +66,19 @@ class EmailToTelegramService {
       logger.info(`Link: ${link}`);
       logger.info('='.repeat(60));
 
-      // Notify processing started
-      await this.telegram.sendProcessing(`
-📧 From: ${metadata.sender}
-📝 Subject: ${metadata.subject}
-🔗 Link: ${link}
-
-Generating PDF...
-      `);
-
       // Generate PDF
       logger.info('Generating PDF from link...');
       const pdfPath = await this.pdfGenerator.generatePDF(link);
 
-      // Send to Telegram
-      logger.info('Sending PDF to Telegram...');
-      await this.telegram.sendPDF(pdfPath, {
+      // Publish to GitHub Pages
+      logger.info('Publishing PDF to GitHub Pages...');
+      await this.github.publishPDF(pdfPath, {
         sender: metadata.sender,
         subject: metadata.subject,
         link: link
       });
 
-      // Clean up PDF file
+      // Clean up temporary PDF file
       logger.info('Cleaning up temporary file...');
       await fs.unlink(pdfPath);
 
@@ -108,14 +95,6 @@ Generating PDF...
         stack: error.stack,
         link,
         seqno
-      });
-
-      // Send error notification to Telegram
-      await this.telegram.sendError('Failed to process email', {
-        sender: metadata.sender,
-        subject: metadata.subject,
-        link: link,
-        error: error.message
       });
     }
   }
@@ -135,9 +114,6 @@ Generating PDF...
       // Close browser
       await this.pdfGenerator.close();
 
-      // Send shutdown notification
-      await this.telegram.sendMessage('🛑 Service stopped');
-
       logger.info('Service stopped successfully');
 
     } catch (error) {
@@ -147,7 +123,7 @@ Generating PDF...
 }
 
 // Create service instance
-const service = new EmailToTelegramService();
+const service = new EmailToGitHubService();
 
 // Handle graceful shutdown
 process.on('SIGINT', async () => {
@@ -165,13 +141,11 @@ process.on('SIGTERM', async () => {
 // Handle uncaught errors
 process.on('uncaughtException', async (error) => {
   logger.error('Uncaught exception:', { error: error.message, stack: error.stack });
-  await service.telegram.sendError('Uncaught exception', { error: error.message });
   process.exit(1);
 });
 
 process.on('unhandledRejection', async (reason, promise) => {
   logger.error('Unhandled rejection:', { reason, promise });
-  await service.telegram.sendError('Unhandled rejection', { reason: String(reason) });
 });
 
 // Start the service
