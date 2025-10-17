@@ -13,7 +13,8 @@
       "Bash(git init:*)",
       "Bash(git add:*)",
       "Bash(git commit -m \"$(cat <<''EOF''\nInitial commit: Email to Telegram PDF service\n\nAutomated email monitoring service that processes Netflix emails and sends PDFs to Telegram:\n- Gmail IMAP monitoring with IDLE push notifications\n- Link extraction with pattern filtering (account/travel/verify)\n- PDF generation using Playwright browser automation\n- Telegram bot integration with IPv4-only connections\n- Optimized IMAP search by sender for efficiency\n- Log rotation with size limits (2MB error.log, 5MB combined.log)\n- Session persistence for browser login state\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(git commit -m \"$(cat <<''EOF''\nRemove obsolete Telegram test files\n\nRemoved test files that are no longer needed after switching to GitHub Pages:\n- test-axios-telegram.js\n- test-imap.js  \n- test-telegram.js\n\nThese were used for testing Telegram bot integration which has been replaced with GitHub Pages publishing.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(git commit -m \"$(cat <<''EOF''\nRemove obsolete Telegram test files\n\nRemoved test files that are no longer needed after switching to GitHub Pages:\n- test-axios-telegram.js\n- test-imap.js  \n- test-telegram.js\n\nThese were used for testing Telegram bot integration which has been replaced with GitHub Pages publishing.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
