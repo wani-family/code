@@ -1,4 +1,13 @@
 {
-  "pdfs": [],
-  "lastUpdate": null
+  "pdfs": [
+    {
+      "filename": "2025-10-18_012355.pdf",
+      "date": "2025년 10월 18일",
+      "time": "오전 01:23:55",
+      "timestamp": "2025-10-17T16:23:55.308Z",
+      "sender": "\"김태완\" <spdlal87@naver.com>",
+      "subject": "가나다 테스트"
+    }
+  ],
+  "lastUpdate": "2025. 10. 18. 오전 1:23:55"
 }
