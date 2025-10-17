@@ -1,0 +1,7 @@
+node_modules/
+.env
+sessions/
+temp/
+logs/
+*.pdf
+.DS_Store
