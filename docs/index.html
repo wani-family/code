@@ -177,7 +177,8 @@
   <script>
     async function loadPDFs() {
       try {
-        const response = await fetch('pdfs.json');
+        // Add timestamp to prevent caching
+        const response = await fetch(`pdfs.json?t=${Date.now()}`);
         const data = await response.json();
 
         const pdfList = document.getElementById('pdfList');
