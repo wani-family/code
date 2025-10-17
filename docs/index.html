@@ -51,6 +51,28 @@
       padding: 30px;
     }
 
+    .pdf-preview {
+      margin-bottom: 30px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .pdf-preview h2 {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px 20px;
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .pdf-preview iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+      display: block;
+    }
+
     .pdf-list {
       list-style: none;
     }
@@ -158,6 +180,11 @@
     </div>
 
     <div class="content">
+      <div id="pdfPreview" class="pdf-preview" style="display: none;">
+        <h2>Latest PDF Preview</h2>
+        <iframe id="pdfFrame" src=""></iframe>
+      </div>
+
       <ul class="pdf-list" id="pdfList">
         <div class="empty-state">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -183,8 +210,14 @@
 
         const pdfList = document.getElementById('pdfList');
         const lastUpdate = document.getElementById('lastUpdate');
+        const pdfPreview = document.getElementById('pdfPreview');
+        const pdfFrame = document.getElementById('pdfFrame');
 
         if (data.pdfs && data.pdfs.length > 0) {
+          // Show preview of the latest PDF
+          pdfPreview.style.display = 'block';
+          pdfFrame.src = `pdfs/${data.pdfs[0].filename}`;
+
           pdfList.innerHTML = data.pdfs.map(pdf => `
             <li class="pdf-item">
               <div class="pdf-info">
